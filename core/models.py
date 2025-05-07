@@ -17,7 +17,7 @@ class CustomUser(AbstractUser):
 
 class Profile(models.Model):
     name = models.CharField(max_length=225)
-    ageLimit = models.CharField(max_length=10, choices=AGE_CHOICES)
+    age_limit = models.CharField(max_length=10, choices=AGE_CHOICES)
     uuid = models.UUIDField(default=uuid.uuid4)
 
 class Movie(models.Model):
@@ -28,7 +28,7 @@ class Movie(models.Model):
     type = models.CharField(max_length=10, choices=MOVIE_CHOICES)
     videos = models.ManyToManyField("Video")
     flyer = models.ImageField(upload_to="flyers")
-    ageLimit = models.CharField(max_length=10, choices=AGE_CHOICES)
+    age_limit = models.CharField(max_length=10, choices=AGE_CHOICES)
 
 class Video(models.Model):
     title = models.CharField(max_length=225, blank=True, null=True)
