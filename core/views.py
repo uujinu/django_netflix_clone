@@ -2,6 +2,8 @@ from django.shortcuts import redirect, render
 from django.views import View
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from .forms import ProfileForm
+from .models import Profile
 
 class Home(View):
     def get(self, request):
@@ -18,8 +20,24 @@ class ProfileList(View):
             "profiles": profiles
         })
 
+@method_decorator(login_required, name="dispatch")
 class ProfileCreate(View):
     def get(self, request):
         # form for creating profile
+        form = ProfileForm()
+        return render(request, "profileCreate.html", {
+            'form': form
+        })
+    
+    def post(self, request):
+        form = ProfileForm(request.POST or None)
 
-        return render(request, "profileCreate.html")
+        if form.is_valid():
+            profile = Profile.objects.create(**form.cleaned_data)
+            if profile:
+                request.user.profiles.add(profile)
+                return redirect(f"/watch/{profile.uuid}")
+
+        return render(request, "profileCreate.html", {
+            "form": form
+        })
